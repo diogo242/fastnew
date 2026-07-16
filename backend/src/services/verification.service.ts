@@ -1,9 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { PNG } from "pngjs";
-import jsQR from "jsqr";
-import pdfParse from "pdf-parse";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const jsQR = require("jsqr") as (data: Uint8ClampedArray, width: number, height: number) => { data: string } | null;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdfParse = require("pdf-parse") as (buffer: Buffer) => Promise<{ text: string }>;
 import fs from "fs/promises";
-import type { ValidationRules } from "./settings.js";
+import type { ValidationRules } from "../utils/settings.js";
 
 export type ExtractedReceipt = {
   quittanceNumber: string;
@@ -325,7 +327,7 @@ export async function verifyReceipt(
     }
   }
 
-  for (const rule of rules.customRules.filter((r) => r.enabled)) {
+  for (const rule of rules.customRules.filter((r: { enabled: boolean }) => r.enabled)) {
     const haystack = `${extracted.rawText} ${extracted.paymentTitle} ${extracted.establishment}`.toLowerCase();
     if (!haystack.includes(rule.value.toLowerCase())) {
       return {

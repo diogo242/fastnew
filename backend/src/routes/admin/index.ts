@@ -39,7 +39,7 @@ adminRouter.post("/login", loginLimiter, async (req, res) => {
   const token = jwt.sign(
     { adminId: admin.id, email: admin.email, role: admin.role },
     secret,
-    { expiresIn: process.env.JWT_EXPIRES_IN ?? "8h" }
+    { expiresIn: (process.env.JWT_EXPIRES_IN ?? "8h") as "8h" }
   );
 
   return res.json({
