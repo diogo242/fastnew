@@ -96,3 +96,4 @@ Sans clé, le mode simulation locale est utilisé pour les tests.
 
 Le code Flutter/Firebase d'origine reste à la racine (`lib/`, `web_app/`).
 La nouvelle plateforme officielle est dans `frontend/` + `backend/`.
+# fastnew
