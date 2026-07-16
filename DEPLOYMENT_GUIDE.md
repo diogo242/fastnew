@@ -22,7 +22,8 @@ git push origin main
 2. Cliquez sur **"New +"** → **"Build and deploy"**
 3. Sélectionnez votre repository GitHub/GitLab
 4. Render détectera automatiquement le fichier `render.yaml`
-5. Cliquez sur **"Connect"** pour créer le service
+5. Le service utilisera automatiquement le répertoire `backend/` et attendra que la base PostgreSQL soit prête avant de démarrer.
+6. Cliquez sur **"Connect"** pour créer le service
 
 #### Option B : Mise à jour du service existant
 1. Allez dans votre service existant **"unipay-verify-api"**
