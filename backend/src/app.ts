@@ -5,6 +5,14 @@ import { verifyRouter } from "./routes/verify.js";
 import { adminRouter } from "./routes/admin/index.js";
 
 export function createApp() {
+  const databaseUrl = process.env.DATABASE_URL || "";
+  console.log(`[env] DATABASE_URL=${databaseUrl || "<not set>"}`);
+
+  if (databaseUrl.includes("localhost")) {
+    console.error("[env] ERROR: DATABASE_URL points to localhost. Application will not start.");
+    process.exit(1);
+  }
+
   const app = express();
 
   app.use(
