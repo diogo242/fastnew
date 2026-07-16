@@ -14,7 +14,15 @@ export function createApp() {
     })
   );
   app.use(express.json({ limit: "2mb" }));
-  app.use("/uploads", express.static(path.resolve(process.env.UPLOAD_DIR ?? "./uploads")));
+  app.use(
+    "/uploads",
+    (req, res, next) => {
+      res.setHeader("Content-Security-Policy", "default-src 'none'; sandbox");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      next();
+    },
+    express.static(path.resolve(process.env.UPLOAD_DIR ?? "./uploads"))
+  );
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", service: "UniPay Verify API" });

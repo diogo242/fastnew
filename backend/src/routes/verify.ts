@@ -27,9 +27,19 @@ const upload = multer({
   },
 });
 
+import rateLimit from "express-rate-limit";
+
+const verifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per window
+  message: { error: "Trop de tentatives de vérification. Veuillez réessayer dans 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 export const verifyRouter = Router();
 
-verifyRouter.post("/", upload.single("quittance"), async (req, res) => {
+verifyRouter.post("/", verifyLimiter, upload.single("quittance"), async (req, res) => {
   try {
     const { nom, prenom, faculte, departement, filiere, niveau, matiere } = req.body;
 
