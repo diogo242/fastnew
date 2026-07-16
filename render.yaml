@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: unipay-verify-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npx prisma db push && npx tsx prisma/seed.ts && node dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: unipay_db_edh0
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: "8h"
+      - key: PORT
+        value: "4000"
+      - key: UPLOAD_DIR
+        value: "./uploads"
+      - key: GEMINI_API_KEY
+        value: "AQ.Ab8RN6KKAwSwdNQHiU8W_mPMT_M8EDV2x6pKTGxVDcfDXH8y3w"
+      - key: ADMIN_EMAIL
+        value: "admin@uac.bj"
+      - key: ADMIN_PASSWORD
+        value: "Admin@2026!"
+      - key: ADMIN_NOM
+        value: "Administrateur UniPay"
+      - key: CORS_ORIGIN
+        value: "https://unipay-verify-api.onrender.com"
+
+databases:
+  - name: unipay_db_edh0
+    plan: free
+    databaseName: unipay_db_edh0
+    user: unipay_db_edh0_user
