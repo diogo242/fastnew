@@ -1,10 +1,11 @@
 # Guide de déploiement sur Render
 
 ## Problème résolu
-L'erreur `P1000: Authentication failed against database server` était causée par des identifiants de base de données locaux incorrects dans le fichier `.env`.
+L'erreur `P1000` puis `P1001` étaient causées par le fait que Prisma ne trouvait pas la variable `DATABASE_URL` fournie par Render et tombait alors sur la base PostgreSQL locale (`localhost:5433`).
 
 ## Solution
-Le fichier `render.yaml` a été créé pour configurer automatiquement le déploiement sur Render avec les bonnes informations de connexion à la base de données.
+- `render.yaml` indique maintenant à Render d'exécuter l'appli dans le dossier `backend/` et d'attendre que la base PostgreSQL Render soit prête avant de démarrer.
+- Le démarrage affiche aussi un diagnostic immédiat sur `DATABASE_URL` pour détecter tout oubli de variable.
 
 ## Étapes de déploiement
 
@@ -29,10 +30,11 @@ git push origin main
 1. Allez dans votre service existant **"unipay-verify-api"**
 2. Cliquez sur **"Settings"**
 3. Dans **"Build & Deploy"** :
+   - **Root Directory** : `backend`
    - **Build Command** : `npm install && npm run build`
    - **Start Command** : `npx prisma db push && npx tsx prisma/seed.ts && node dist/index.js`
-4. Dans **"Environment Variables"**, ajoutez/modifiez :
-   - `DATABASE_URL` : Cliquez sur **"Add from Database"** → sélectionnez `unipay_db_edh0`
+4. Dans **"Environment"** , vérifiez/ajoutez :
+   - `DATABASE_URL` : Cliquez sur **"Add from Database"** → sélectionnez `unipay_db_edh0` → propriété `connectionString`
    - `JWT_SECRET` : Générez une valeur sécurisée
    - `GEMINI_API_KEY` : `AQ.Ab8RN6KKAwSwdNQHiU8W_mPMT_M8EDV2x6pKTGxVDcfDXH8y3w`
    - `ADMIN_EMAIL` : `admin@uac.bj`
@@ -41,6 +43,11 @@ git push origin main
    - `CORS_ORIGIN` : `https://unipay-verify-api.onrender.com`
    - `PORT` : `4000`
    - `UPLOAD_DIR` : `./uploads`
+5. Sauvegardez, puis faites un **Manual Deploy**.
+
+#### Vérification rapide sur Render
+- Dans **Environment**, `DATABASE_URL` doit être défini et **ne doit pas** contenir `localhost`.
+- Si `DATABASE_URL` est absent, ajoutez-le depuis la base de données Render, pas à la main.
 
 ### Étape 3 : Vérifier la base de données
 - Assurez-vous que la base de données PostgreSQL **unipay_db_edh0** existe sur Render

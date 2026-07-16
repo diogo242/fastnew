@@ -6,7 +6,7 @@ services:
     rootDirectory: backend
     buildCommand: npm install && npm run build
     startCommand: >
-      bash -c 'until npx prisma db push; do echo "Waiting for database to be ready..."; sleep 5; done
+      bash -c 'echo "DATABASE_URL=${DATABASE_URL:-<not set>}" && if [[ "${DATABASE_URL:-}" == *"localhost"* ]]; then echo "ERROR: DATABASE_URL points to localhost"; exit 1; fi; until npx prisma db push; do echo "Waiting for database to be ready..."; sleep 5; done
       && npx tsx prisma/seed.ts
       && node dist/index.js'
     envVars:

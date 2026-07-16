@@ -47,3 +47,6 @@ app.*.map.json
 # Environment variables
 .env
 backend/.env
+
+# Local Prisma dev DB
+backend/prisma/dev.db
